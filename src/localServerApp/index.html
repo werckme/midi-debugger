@@ -1,0 +1,29 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Werckmeister Debugger</title>
+</head>
+<body>
+    <h1>$FILENAME</h1>
+    <div id="listview"></div>
+</body>
+<script src="index.js"></script>
+<script>
+    const dbg = new WmDbg.WmMidiFileDebugger();
+    const listview = document.querySelector('#listview');
+    fetch('/midifile')
+        .then((response) => {
+            response.arrayBuffer().then(buffer => {
+                dbg.setMidiFile(buffer);
+                dbg.addListView(listview);
+                dbg.update();
+            });
+        });
+    
+
+</script>
+</html>

@@ -1,3 +1,4 @@
+/* LIST VIEW */
 .wm-dbg-listview {
     font-family: monospace;
     font-size: 12px;
@@ -6,8 +7,44 @@
 
 .wm-dbg-listview th, td {
     border: 1px solid lightgrey;
+    border-radius: 5px;
 }
 
 .wm-dbg-listview th, td {
     padding: 3px;
+}
+
+/* DATA FLOW VIEW */
+.wm-dbg-dataflowview  {
+    font-family: monospace;
+    font-size: 12px;
+}    
+
+.wm-dbg-dataflowview .events {
+    display: flex;
+    flex-wrap: wrap;
+}
+.wm-dbg-dataflowview .event-date {
+    border: 3px solid lightgrey;
+    border-radius: 15px;
+    padding: 15px;
+    margin: 5px;
+    min-width: 115px;
+    min-height: 80px;
+}
+.wm-dbg-dataflowview .event-date.note-on{
+    background-color: #f0b6fa;
+}
+
+.wm-dbg-dataflowview .event-date.note-off{
+    background-color: #fae4b6;
+}
+
+
+/* CHKBX GRP */
+.chkbx-grp {
+    display: flex;
+}
+.chkbx-grp > div {
+    margin-left: 5px;
 }

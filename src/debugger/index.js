@@ -1,4 +1,5 @@
 import * as MidiFileModule from "midifile";
+import { DataFlowView } from "./renderer/DataFlowView";
 import { ListView } from "./renderer/ListView";
 import css from "./styles.lazy.css";
 const MidiFile = MidiFileModule.default;
@@ -11,8 +12,9 @@ export class WmMidiFileDebugger {
     }
 
     addListView(element) {
-        const listView = new ListView(element);
-        this.views.push(listView);
+        const view = new DataFlowView(element);
+        //const view = new ListView(element);
+        this.views.push(view);
     }
 
     update() {

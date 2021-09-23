@@ -1,4 +1,5 @@
 import * as MidiEvents from 'midievents';
+import * as _ from 'lodash';
 
 export function eventTypeToString(event) {
     if (event.type === MidiEvents.EVENT_MIDI) {
@@ -45,5 +46,22 @@ export function eventDataToString(event) {
             || event.subtype === MidiEvents.EVENT_META_CUE_POINT)) {
         return String.fromCharCode(...event.data);
     }
+    if (event.type === MidiEvents.EVENT_MIDI 
+        && (event.subtype === MidiEvents.EVENT_MIDI_NOTE_ON
+         || event.subtype === MidiEvents.EVENT_MIDI_NOTE_OFF)) {
+        return `${midiNumberToNoteName(event.param1)} ${event.param2}`;
+    }
     return `${event.param1 || ''} ${event.param2 || ''}`;
+}
+
+export function midiNumberToNoteName(number) {
+    const names = ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'];
+    const octavePostfixes = [",,,,,",",,,,",",,,",",,",",","", "'", "''", "'''", "''''", "'''''"]
+    const name = names[number%12];
+    const octave = octavePostfixes[Math.floor(number/12)]
+    return `${name}${octave}`;
+}
+
+export function getNumberOfTracks(midifile) {
+    return midifile.header.getTracksCount();
 }

@@ -12,6 +12,7 @@ if (process.argv.length < 3) {
 const midiFilePath = process.argv[2];
 const mainIndexHtml = path.join(__dirname, './index.html');
 const mainIndexJs = path.join(__dirname, '../../dist/index.js');
+const mainIndexCss = path.join(__dirname, '../../dist/debugger.css');
 
 const port = process.env.PORT || 4488;
 
@@ -28,8 +29,7 @@ app.get('/', async (req, res, next) => {
 
 app.get('/index.js', async (req, res, next) => {
     try {
-       let js = fs.readFileSync(mainIndexJs).toString();
-       res.send(js);
+       res.sendFile(mainIndexJs);
     } catch(ex) {
         console.error(ex);
         next(Error());

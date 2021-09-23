@@ -1,0 +1,13 @@
+.wm-dbg-listview {
+    font-family: monospace;
+    font-size: 12px;
+    border-collapse: collapse;
+}    
+
+.wm-dbg-listview th, td {
+    border: 1px solid lightgrey;
+}
+
+.wm-dbg-listview th, td {
+    padding: 3px;
+}

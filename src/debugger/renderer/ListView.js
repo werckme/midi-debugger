@@ -1,10 +1,14 @@
+import { eventDataToString, eventTypeToString } from "./EventHelper";
+
 export class ListView {
     element = null;
+    ppq = 0;
     constructor(element) {
         this.element = element;
     }
 
     update(midifile) {
+        this.ppq = midifile.header.getTicksPerBeat();
         this.render(midifile);
     }
 
@@ -16,20 +20,26 @@ export class ListView {
 
     renderEvent(row, event) {
         console.log(event)
+        const time = event.playTime / this.ppq;
         this.addDate(row, event.track);
-        this.addDate(row, event.playTime);
-        this.addDate(row, `${event.index} ${event.param1 || ""} ${event.param2 || ""}`);
+        this.addDate(row, time.toFixed(6));
+        this.addDate(row, event.channel !== undefined ? event.channel : "-");
+        this.addDate(row, eventTypeToString(event));
+        this.addDate(row, eventDataToString(event));
     }
 
     render(midifile) {
         const table = document.createElement("table");
+        table.className = "wm-dbg-listview";
         const header = document.createElement("thead");
         table.appendChild(header);
         const row = document.createElement("tr");
         header.appendChild(row);
         this.addDate(row, 'Track')
-        this.addDate(row, 'Ticks')
-        this.addDate(row, 'Event')
+        this.addDate(row, 'Time (qtrs)')
+        this.addDate(row, 'Channel')
+        this.addDate(row, 'Type')
+        this.addDate(row, 'Data')
         const tbody = document.createElement("tbody");
         table.appendChild(tbody);
         for (const event of midifile.getEvents()) {

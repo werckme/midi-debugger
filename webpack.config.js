@@ -8,11 +8,22 @@ module.exports = {
         test: /\.(js)$/,
         exclude: /node_modules/,
         use: ['babel-loader', "eslint-loader"]
-      }
-    ]
+      },
+      {
+        test: /\.css$/i,
+        use: [
+          {
+            loader: "style-loader",
+            options: { injectType: "lazyStyleTag" },
+          },
+          "css-loader",
+        ],
+      },
+    ],
+    
   },
   resolve: {
-    extensions: ['*', '.js']
+    extensions: ['*', '.js', '.css']
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

@@ -1,5 +1,6 @@
 import * as MidiFileModule from "midifile";
 import { ListView } from "./renderer/ListView";
+import css from "./styles.lazy.css";
 const MidiFile = MidiFileModule.default;
 
 export class WmMidiFileDebugger {
@@ -20,3 +21,5 @@ export class WmMidiFileDebugger {
         }
     }
 }
+
+css.use();

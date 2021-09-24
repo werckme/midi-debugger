@@ -1,16 +1,19 @@
 export class CheckboxFilterGroup {
     selected = {};
     onSelectionChanged = () => {};
-    createElement(values) {
+    createElement(checkboxItems) {
         const div = document.createElement("div");
         div.className = "chkbx-grp";
-        for(const value of values) {
+        for(const item of checkboxItems) {
+            const value = item.value;
+            const name = item.name;
             const defaultSelected = true;
             this.selected[value] = defaultSelected;
             const grp = document.createElement('div');
+            grp.classList.add(item.class_ || "");
             const label = document.createElement("label");
             grp.appendChild(label);
-            label.innerText = value;
+            label.innerText = name;
             const checkbox = document.createElement("input");
             checkbox.checked = defaultSelected;
             checkbox.onclick = () => {

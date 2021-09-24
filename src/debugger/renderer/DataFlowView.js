@@ -13,9 +13,9 @@ export class DataFlowView extends ListView {
         this.element = element;
     }
 
-    addDate(title, row, val) {
+    addDate(row, val) {
         const td = document.createElement("div");
-        td.innerText = `${title}: ${val}`;
+        td.innerText = `${val}`;
         row.appendChild(td);
     }
 

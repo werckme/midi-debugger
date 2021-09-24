@@ -1,5 +1,4 @@
 import * as MidiEvents from 'midievents';
-import * as _ from 'lodash';
 
 export function eventTypeToString(event) {
     if (event.type === MidiEvents.EVENT_MIDI) {
@@ -15,7 +14,7 @@ export function eventTypeToString(event) {
         }
     }
     if (event.type === MidiEvents.EVENT_META) {
-        switch(event.subtype) {
+        switch (event.subtype) {
             case MidiEvents.EVENT_META_SEQUENCE_NUMBER: return 'seq nr.';
             case MidiEvents.EVENT_META_TEXT: return 'text';
             case MidiEvents.EVENT_META_COPYRIGHT_NOTICE: return '©';
@@ -36,8 +35,8 @@ export function eventTypeToString(event) {
 }
 
 export function eventDataToString(event) {
-    if (event.type === MidiEvents.EVENT_META 
-        && (   event.subtype === MidiEvents.EVENT_META_TEXT
+    if (event.type === MidiEvents.EVENT_META
+        && (event.subtype === MidiEvents.EVENT_META_TEXT
             || event.subtype === MidiEvents.EVENT_META_COPYRIGHT_NOTICE
             || event.subtype === MidiEvents.EVENT_META_TRACK_NAME
             || event.subtype === MidiEvents.EVENT_META_INSTRUMENT_NAME
@@ -46,22 +45,40 @@ export function eventDataToString(event) {
             || event.subtype === MidiEvents.EVENT_META_CUE_POINT)) {
         return String.fromCharCode(...event.data);
     }
-    if (event.type === MidiEvents.EVENT_MIDI 
+    if (event.type === MidiEvents.EVENT_MIDI
         && (event.subtype === MidiEvents.EVENT_MIDI_NOTE_ON
-         || event.subtype === MidiEvents.EVENT_MIDI_NOTE_OFF)) {
+            || event.subtype === MidiEvents.EVENT_MIDI_NOTE_OFF)) {
         return `${midiNumberToNoteName(event.param1)} ${event.param2}`;
+    }
+    if (event.type === MidiEvents.EVENT_META && event.subtype === MidiEvents.EVENT_META_TIME_SIGNATURE) {
+        return `${event.param1}/${Math.exp(event.param2 * Math.log(2))}`;
     }
     return `${event.param1 || ''} ${event.param2 || ''}`;
 }
 
 export function midiNumberToNoteName(number) {
     const names = ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'];
-    const octavePostfixes = [",,,,,",",,,,",",,,",",,",",","", "'", "''", "'''", "''''", "'''''"]
-    const name = names[number%12];
-    const octave = octavePostfixes[Math.floor(number/12)]
+    const octavePostfixes = [",,,,,", ",,,,", ",,,", ",,", ",", "", "'", "''", "'''", "''''", "'''''"]
+    const name = names[number % 12];
+    const octave = octavePostfixes[Math.floor(number / 12)]
     return `${name}${octave}`;
 }
 
 export function getNumberOfTracks(midifile) {
     return midifile.header.getTracksCount();
+}
+
+export function getTracks(midifile) {
+    const trackskWithName = [];
+    for (const event of midifile.getEvents()) {
+        const key = event.track;
+        if (!trackskWithName[key]) {
+            trackskWithName[key] = "unknown";
+        }
+        if (event.type === MidiEvents.EVENT_META
+            && event.subtype === MidiEvents.EVENT_META_TRACK_NAME) {
+            trackskWithName[key] = eventDataToString(event);
+        }
+    }
+    return trackskWithName;
 }

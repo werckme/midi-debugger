@@ -1,4 +1,4 @@
-import { eventDataToString, eventTypeToString, getNumberOfTracks } from "./MidiHelper";
+import { eventDataToString, eventTypeToString, getNumberOfTracks, getTracks } from "./MidiHelper";
 import { CheckboxFilterGroup } from './CheckboxFilterGroup';
 import * as _ from 'lodash';
 
@@ -13,8 +13,9 @@ export class ListView {
 
     update(midifile) {
         this.element.innerHTML = '';
-        const numberOfTracks = getNumberOfTracks(midifile);
-        const trackFilterElement = this.trackFilter.createElement(_.range(numberOfTracks));
+        const tracks = getTracks(midifile);
+        const filterItems = tracks.map((x, idx) => ({name: `${x}(${idx})`, value: idx, class_: `wm-dbg-track-${idx}`}));
+        const trackFilterElement = this.trackFilter.createElement(filterItems);
         this.trackFilter.onSelectionChanged = () => {
             this.render(midifile);
         };
@@ -23,7 +24,7 @@ export class ListView {
         this.render(midifile);
     }
 
-    addDate(_title, row, val) {
+    addDate(row, val) {
         const td = document.createElement("td");
         td.innerText = val;
         row.appendChild(td);
@@ -32,13 +33,13 @@ export class ListView {
     renderEvent(container, event) {
         const time = event.playTime / this.ppq;
         const type = eventTypeToString(event);
-        container.classList.add(`track-${event.track}`);
+        container.classList.add(`wm-dbg-track-${event.track}`);
         container.classList.add(_.kebabCase(type));
-        this.addDate('tr', container, event.track);
-        this.addDate('tm', container, time.toFixed(6));
-        this.addDate('ch', container, event.channel !== undefined ? event.channel : "-");
-        this.addDate('ty', container, type);
-        this.addDate('dt', container, eventDataToString(event));
+        this.addDate(container, event.track);
+        this.addDate(container, time.toFixed(6));
+        this.addDate(container, event.channel !== undefined ? event.channel : "-");
+        this.addDate(container, type);
+        this.addDate(container, eventDataToString(event));
     }
 
     render(midifile) {

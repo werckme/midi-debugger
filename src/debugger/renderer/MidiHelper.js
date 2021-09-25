@@ -1,5 +1,7 @@
 import * as MidiEvents from 'midievents';
 
+const MaxPitchBend = 16383;
+
 export function eventTypeToString(event) {
     if (event.type === MidiEvents.EVENT_MIDI) {
         switch (event.subtype) {
@@ -52,6 +54,10 @@ export function eventDataToString(event) {
     }
     if (event.type === MidiEvents.EVENT_META && event.subtype === MidiEvents.EVENT_META_TIME_SIGNATURE) {
         return `${event.param1}/${Math.exp(event.param2 * Math.log(2))}`;
+    }
+    if (event.type === MidiEvents.EVENT_MIDI 
+        && (event.subtype === MidiEvents.EVENT_MIDI_PITCH_BEND)) {
+        return ((event.param2 << 7 | event.param1) / MaxPitchBend).toFixed(6);
     }
     return `${event.param1 || ''} ${event.param2 || ''}`;
 }

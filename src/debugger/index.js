@@ -12,7 +12,6 @@ export class WmMidiFileDebugger {
     }
 
     addListView(element) {
-        //const view = new DataFlowView(element);
         const view = new ListView(element);
         this.views.push(view);
     }

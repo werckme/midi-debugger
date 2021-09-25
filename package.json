@@ -1,6 +1,6 @@
 {
   "name": "@werckmeister/midi-debugger",
-  "version": "1.0.0",
+  "version": "1.0.0-3",
   "description": "A MIDI debugger for Werckmeister generated MIDI files ",
   "main": "dist/index.js",
   "scripts": {

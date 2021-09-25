@@ -4,7 +4,7 @@
   "description": "A MIDI debugger for Werckmeister generated MIDI files ",
   "main": "dist/index.js",
   "scripts": {
-    "build": "webpack --mode=production",
+    "build": "webpack --mode=production && cp package.json dist",
     "watch": "webpack --watch --mode=development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

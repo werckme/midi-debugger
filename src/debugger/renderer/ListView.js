@@ -6,6 +6,7 @@ export class ListView {
     element = null;
     ppq = 0;
     trackFilter = new CheckboxFilterGroup();
+    filterItems = null;
     eventList = null;
     constructor(element) {
         this.element = element;
@@ -15,7 +16,12 @@ export class ListView {
         this.element.innerHTML = '';
         const tracks = getTracks(midifile);
         const filterItems = tracks.map((x, idx) => ({name: `${x}(${idx})`, value: idx, class_: `wm-dbg-track-${idx}`}));
-        const trackFilterElement = this.trackFilter.createElement(filterItems);
+        const filterChanged = _(filterItems).isEqual(this.filterItems) === false;
+        let trackFilterElement = null;
+        if (filterChanged) {
+            this.filterItems = filterItems;
+            trackFilterElement = this.trackFilter.createElement(this.filterItems);
+        }
         this.trackFilter.onSelectionChanged = () => {
             this.render(midifile);
         };

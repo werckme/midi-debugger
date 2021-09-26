@@ -19,7 +19,7 @@
 
 .wm-dbg-listview thead tr {
     position: sticky;
-    top: 27px;
+    top: 0px;
     z-index: 1;
     background: #132e3d;
     color: white;
@@ -112,13 +112,14 @@
 .chkbx-grp {
     display: flex;
     margin-bottom: 1em;
-    position: sticky;
-    top: 0;
+    position: fixed;
+    top: 15px;
     padding-bottom: 5px;
-    background: rgb(255, 255, 255);
     z-index: 1;
     white-space: nowrap;
     justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .chkbx-grp label {
@@ -130,6 +131,16 @@
     margin-left: 3px;
     padding: 1px 5px;
     border: 1px solid slategray;
-    border-radius: 15px;
+    border-radius: 5px;
     font-size: 13px;
+    overflow: hidden;
+    width: 20px;
+    text-overflow: ellipsis;
+    transition: width 100ms linear;
+    transition-delay: 1s;
+}
+
+.chkbx-grp:hover > div {
+    transition: width 300ms linear;
+    width: 100%;
 }

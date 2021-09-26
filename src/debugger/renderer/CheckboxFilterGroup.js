@@ -12,7 +12,6 @@ export class CheckboxFilterGroup {
             const grp = document.createElement('div');
             grp.classList.add(item.class_ || "");
             const label = document.createElement("label");
-            grp.appendChild(label);
             label.innerText = name;
             const checkbox = document.createElement("input");
             checkbox.checked = defaultSelected;
@@ -23,6 +22,7 @@ export class CheckboxFilterGroup {
             checkbox.type = "checkbox";
             checkbox.name = value;
             grp.appendChild(checkbox);
+            grp.appendChild(label);
             div.appendChild(grp);
         }
         return div;

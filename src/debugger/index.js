@@ -5,6 +5,9 @@ import css from "./styles.lazy.css";
 const MidiFile = MidiFileModule.default;
 
 export class WmMidiFileDebugger {
+    constructor() {
+        window.wmDbg = this;
+    }
     midifile = null;
     views = [];
     setMidiFile(arrayBuffer) {

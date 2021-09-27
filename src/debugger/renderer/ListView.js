@@ -6,6 +6,7 @@ export class ListView {
     element = null;
     ppq = 0;
     trackFilter = new CheckboxFilterGroup();
+    trackFilterElement = null;
     filterItems = null;
     eventList = null;
     constructor(element) {
@@ -20,12 +21,12 @@ export class ListView {
         let trackFilterElement = null;
         if (filterChanged) {
             this.filterItems = filterItems;
-            trackFilterElement = this.trackFilter.createElement(this.filterItems);
+            this.trackFilterElement = this.trackFilter.createElement(this.filterItems);
         }
         this.trackFilter.onSelectionChanged = () => {
             this.render(midifile);
         };
-        this.element.appendChild(trackFilterElement);
+        this.element.appendChild(this.trackFilterElement);
         this.ppq = midifile.header.getTicksPerBeat();
         this.render(midifile);
     }

@@ -9,6 +9,7 @@
       "no-unused-vars": ["warn", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }]
     },
     "globals": {
-      "document": false
+      "document": false,
+      "window": false
     }
 }

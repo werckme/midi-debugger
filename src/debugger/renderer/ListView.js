@@ -38,18 +38,19 @@ export class ListView {
     }
 
     renderEvent(container, event) {
-        const time = event.playTime / this.ppq;
+        this.quarters += event.delta / this.ppq;
         const type = eventTypeToString(event);
         container.classList.add(`wm-dbg-track-${event.track}`);
         container.classList.add(_.kebabCase(type));
         this.addDate(container, event.track);
-        this.addDate(container, time.toFixed(6));
+        this.addDate(container, this.quarters.toFixed(6));
         this.addDate(container, event.channel !== undefined ? event.channel : "-");
         this.addDate(container, type);
         this.addDate(container, eventDataToString(event));
     }
-
+    quarters = 0;
     render(midifile) {
+        this.quarters = 0;
         if (!this.eventList) {
             this.eventList = document.createElement("table");
         } else {

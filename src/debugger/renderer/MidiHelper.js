@@ -53,7 +53,7 @@ export function eventDataToString(event) {
         return `${midiNumberToNoteName(event.param1)} ${event.param2}`;
     }
     if (event.type === MidiEvents.EVENT_META && event.subtype === MidiEvents.EVENT_META_TIME_SIGNATURE) {
-        return `${event.param1}/${Math.exp(event.param2 * Math.log(2))}`;
+        return `${event.param1}/${Math.round(Math.exp(event.param2 * Math.log(2)))}`;
     }
     if (event.type === MidiEvents.EVENT_MIDI 
         && (event.subtype === MidiEvents.EVENT_MIDI_PITCH_BEND)) {

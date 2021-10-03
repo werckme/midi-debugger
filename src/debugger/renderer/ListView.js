@@ -38,7 +38,6 @@ export class ListView {
     }
 
     renderEvent(container, event) {
-        this.quarters += event.delta / this.ppq;
         const type = eventTypeToString(event);
         container.classList.add(`wm-dbg-track-${event.track}`);
         container.classList.add(_.kebabCase(type));
@@ -69,6 +68,7 @@ export class ListView {
         const tbody = document.createElement("tbody");
         this.eventList.appendChild(tbody);
         for (const event of midifile.getEvents()) {
+            this.quarters += event.delta / this.ppq;
             const isTrackSelected = this.trackFilter.selected[event.track];
             if (!isTrackSelected) {
                 continue;

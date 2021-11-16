@@ -1,0 +1,146 @@
+/* LIST VIEW */
+.wm-dbg-listview {
+    font-family: monospace;
+    font-size: 12px;
+    border-collapse: collapse;
+    margin: auto;
+    min-width: 625px;
+}    
+
+.wm-dbg-listview th, td {
+    border-right: 1px solid lightgrey;
+    border-left: 1px solid lightgrey;
+}
+
+.wm-dbg-listview th, td {
+    padding: 3px;
+}
+
+
+.wm-dbg-listview thead tr {
+    position: sticky;
+    top: 0px;
+    z-index: 1;
+    background: #132e3d;
+    color: white;
+}
+
+.wm-dbg-listview tr.note-off {
+    opacity: 0.7;
+}
+.wm-dbg-track-0 {
+    background-color: white;
+}
+.wm-dbg-track-1 {
+    background-color: #6F69AC;
+}
+.wm-dbg-track-2 {
+    background-color: #95DAC1;
+}
+.wm-dbg-track-3 {
+    background-color: #FFEBA1;
+}
+.wm-dbg-track-4 {
+    background-color: #FD6F96;
+}
+.wm-dbg-track-5 {
+    background-color: #3DB2FF;
+}
+.wm-dbg-track-6 {
+    background-color: #FFB830;
+}
+.wm-dbg-track-7 {
+    background-color: #FF2442;
+}
+.wm-dbg-track-8 {
+    background-color: #FF4848;
+}
+.wm-dbg-track-9 {
+    background-color: #AC66CC;
+}
+.wm-dbg-track-10 {
+    background-color: #F37121;
+}
+.wm-dbg-track-11 {
+    background-color: #F5B461;
+}
+.wm-dbg-track-12 {
+    background-color: #D92027;
+}
+.wm-dbg-track-13 {
+    background-color: #BC658D;
+}
+.wm-dbg-track-14 {
+    background-color: #8D448B;
+}
+.wm-dbg-track-15 {
+    background-color: #DF0E62;
+}
+.wm-dbg-track-16 {
+    background-color: #FF2E4C;
+}
+
+
+/* DATA FLOW VIEW */
+.wm-dbg-dataflowview  {
+    font-family: monospace;
+    font-size: 12px;
+}    
+
+.wm-dbg-dataflowview .events {
+    display: flex;
+    flex-wrap: wrap;
+}
+.wm-dbg-dataflowview .event-date {
+    border: 3px solid lightgrey;
+    border-radius: 15px;
+    padding: 15px;
+    margin: 5px;
+    min-width: 115px;
+    min-height: 80px;
+}
+.wm-dbg-dataflowview .event-date.note-on{
+    background-color: #f0b6fa;
+}
+
+.wm-dbg-dataflowview .event-date.note-off{
+    background-color: #fae4b6;
+}
+
+
+/* CHKBX GRP */
+.chkbx-grp {
+    display: flex;
+    margin-bottom: 1em;
+    position: fixed;
+    top: 15px;
+    padding-bottom: 5px;
+    z-index: 1;
+    white-space: nowrap;
+    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.chkbx-grp label {
+    position: relative;
+    top: -2px;
+}
+
+.chkbx-grp > div {
+    margin-left: 3px;
+    padding: 1px 5px;
+    border: 1px solid slategray;
+    border-radius: 5px;
+    font-size: 13px;
+    overflow: hidden;
+    width: 20px;
+    text-overflow: ellipsis;
+    transition: width 100ms linear;
+    transition-delay: 1s;
+}
+
+.chkbx-grp:hover > div {
+    transition: width 300ms linear;
+    width: 100%;
+}

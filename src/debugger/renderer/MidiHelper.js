@@ -59,7 +59,8 @@ export function eventDataToString(event) {
         && (event.subtype === MidiEvents.EVENT_MIDI_PITCH_BEND)) {
         return ((event.param2 << 7 | event.param1) / MaxPitchBend).toFixed(6);
     }
-    return `${event.param1 || ''} ${event.param2 || ''}`;
+    const paramToString = x => x !== undefined ? x.toString() : '';
+    return `${paramToString(event.param1)} ${paramToString(event.param2)}`;
 }
 
 export function midiNumberToNoteName(number) {

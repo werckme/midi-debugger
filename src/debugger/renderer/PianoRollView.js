@@ -1,9 +1,7 @@
-import { eventDataToString, eventTypeToString, getNumberOfTracks, getTracks } from "./MidiHelper";
+import { eventDataToString, eventTypeToString, midiNumberToNoteNameHtml, getTracks } from "./MidiHelper";
 import * as MidiEvents from 'midievents';
 import { CheckboxFilterGroup } from './CheckboxFilterGroup';
 import * as _ from 'lodash';
-
-const xmlns = "http://www.w3.org/2000/svg";
 
 export class PianoRollView {
     element = null;
@@ -34,46 +32,76 @@ export class PianoRollView {
         this.render(midifile);
     }
 
+    eventPosAndDuration(noteOn, noteOff) {
+        return `@${noteOn.absPosition.toFixed(3)} - ${noteOff.absPosition.toFixed(3)}`;
+    }
 
     renderEvent(track, event) {
         const xscale = 100;
-        const yscale = 10;
-        const container = track.group;
-        const type = eventTypeToString(event);
         const isNoteOn = event.type === MidiEvents.EVENT_MIDI && event.subtype === MidiEvents.EVENT_MIDI_NOTE_ON;
         const isNoteOff = event.type === MidiEvents.EVENT_MIDI && event.subtype === MidiEvents.EVENT_MIDI_NOTE_OFF;
         if (!isNoteOn && !isNoteOff) {
             return;
         }
-        const pitch = event.param1;
+        const eventPitch = event.param1;
         if (isNoteOn) {
-            track.noteOnEvents[pitch] = event;
+            let pitchGroup = track.pitches[eventPitch];
+            pitchGroup.elements.push(event);
             return;
         }
-        const noteOn = track.noteOnEvents[pitch];
-        if (!noteOn) {
+        const pitches = track.pitches[eventPitch];
+        const pitchContainer = pitches.container;
+        const noteOn = _.last(pitches.elements);
+        const noteHasAlreadyDuration = noteOn.duration !== undefined;
+        if (noteHasAlreadyDuration) {
             console.warn(`corresponding midi on note not found`)
             return;
         }
-        const duration = event.absPosition - noteOn.absPosition;
-        const rect = document.createElementNS(xmlns, 'rect');
-        rect.setAttributeNS(null, "x", noteOn.absPosition * xscale);
-        rect.setAttributeNS(null, "y", pitch * yscale);
-        rect.setAttributeNS(null, "width", duration * xscale);
-        rect.setAttributeNS(null, "height", 10);
-        rect.setAttributeNS(null, "fill", "red");
-        rect.setAttributeNS(null, "stroke", "black");
-        container.appendChild(rect);
+        noteOn.duration = event.absPosition - noteOn.absPosition;
+        const eventElement = document.createElement('div');
+        eventElement.classList.add("event");
+        eventElement.classList.add(`velocity-${noteOn.param2}`);
+        eventElement.style.width = `${noteOn.duration * xscale}px`;
+        eventElement.style.left = `${noteOn.absPosition * xscale}px`;
+        const eventText = eventDataToString(noteOn);
+        const textElement = document.createElement('span');
+        eventElement.title = `${eventText}${this.eventPosAndDuration(noteOn, event)}`;
+        textElement.textContent = eventText;
+        eventElement.appendChild(textElement);
+        pitchContainer.appendChild(eventElement);
     }
     quarters = 0;
+
+    createPitchGroups(track) {
+        for(let pitch=127; pitch >= 0; --pitch) {
+            const pitchName = midiNumberToNoteNameHtml(pitch);
+            const pitchContainer = document.createElement('div');
+            pitchContainer.classList.add("pitch-group");
+            pitchContainer.classList.add(pitchName);
+            track.pitches[pitch] = {elements: [], container: pitchContainer};
+            track.container.appendChild(pitchContainer);
+        }
+    }
+
+    postProcess(tracks) {
+        for(const trackNr in tracks) {
+            const track = tracks[trackNr];
+            const pitchElements = _(track.pitches)
+                .map(x=>x.elements)
+                .filter(x=>x.length > 0)
+                .value();
+            if (pitchElements.length === 0) {
+                track.container.classList.add("track-empty");
+            }
+        }
+    }
+
     render(midifile) {
-        
         const tracks = {};
         this.quarters = 0;
         if (!this.eventList) {
-            this.eventList = document.createElementNS(xmlns, "svg");
-            this.eventList.setAttributeNS(null, "width", "1200");
-            this.eventList.setAttributeNS(null, "height", "700");
+            this.eventList = document.createElement("div");
+            this.eventList.classList.add("piano-roll");
         } else {
             this.eventList.innerHTML = '';
         }
@@ -81,13 +109,21 @@ export class PianoRollView {
             this.quarters += event.delta / this.ppq;
             event.absPosition = this.quarters;
             let track = tracks[event.track];
+            const isTrackSelected = this.trackFilter.selected[event.track];
+            if (!isTrackSelected) {
+                continue;
+            }
             if (!track) {
-                track = { group: document.createElementNS(xmlns, "g"), noteOnEvents: {} };
+                track = { container: document.createElement("div"), pitches: [] };
+                this.createPitchGroups(track);
+                track.container.classList.add("track");
+                track.container.classList.add(`track-${event.track}`);
                 tracks[event.track] = track;
-                this.eventList.appendChild(track.group);
+                this.eventList.appendChild(track.container);
             }
             this.renderEvent(track, event);
         }
+        this.postProcess(tracks);
         this.element.appendChild(this.eventList);
     }
 }

@@ -71,6 +71,13 @@ export function midiNumberToNoteName(number) {
     return `${name}${octave}`;
 }
 
+export function midiNumberToNoteNameHtml(number) {
+    const names = ['c', 'c-sharp', 'd', 'd-sharp', 'e', 'f', 'f-sharp', 'g', 'g-sharp', 'a', 'a-sharp', 'b'];
+    const name = names[number % 12];
+    const octave = Math.floor(number / 12);
+    return `${name}-${octave}`;
+}
+
 export function getNumberOfTracks(midifile) {
     return midifile.header.getTracksCount();
 }

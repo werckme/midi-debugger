@@ -1,3 +1,43 @@
+/* PIANO ROLL VIEW */
+.piano-roll .track {
+    position: relative;
+    white-space: nowrap;
+}
+
+.track + .track {
+    border-top: 2px solid black;
+    padding-top: 30px;
+    margin-top: 30px;
+}
+
+.track.track-empty + .track {
+    border-top: none;
+    padding-top: 0px;
+    margin-top: 0px;
+}
+
+.piano-roll .pitch-group {
+}
+
+.piano-roll .event {
+    display: inline-flex;
+    position: relative;
+    background-color: red;
+    border: 1px solid black;
+    height: 10px;
+    padding-left: 3px;
+}
+
+.piano-roll .event span {
+    color: black;
+    font-size: 10px;
+    font-family: monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
 /* LIST VIEW */
 .wm-dbg-listview {
     font-family: monospace;
@@ -28,55 +68,89 @@
 .wm-dbg-listview tr.note-off {
     opacity: 0.7;
 }
-.wm-dbg-track-0 {
+.wm-dbg-track-0
+, .track-0 .event 
+{
     background-color: white;
 }
-.wm-dbg-track-1 {
+.wm-dbg-track-1 
+, .track-1 .event
+{
     background-color: #6F69AC;
 }
-.wm-dbg-track-2 {
+.wm-dbg-track-2 
+, .track-2 .event
+{
     background-color: #95DAC1;
 }
-.wm-dbg-track-3 {
+.wm-dbg-track-3
+, .track-3 .event
+{
     background-color: #FFEBA1;
 }
-.wm-dbg-track-4 {
+.wm-dbg-track-4 
+, .track-4 .event
+{
     background-color: #FD6F96;
 }
-.wm-dbg-track-5 {
+.wm-dbg-track-5 
+, .track-5 .event
+{
     background-color: #3DB2FF;
 }
-.wm-dbg-track-6 {
+.wm-dbg-track-6 
+, .track-6 .event
+{
     background-color: #FFB830;
 }
-.wm-dbg-track-7 {
+.wm-dbg-track-7 
+, .track-7 .event
+{
     background-color: #FF2442;
 }
-.wm-dbg-track-8 {
+.wm-dbg-track-8 
+, .track-8 .event
+{
     background-color: #FF4848;
 }
-.wm-dbg-track-9 {
+.wm-dbg-track-9 
+, .track-9 .event
+{
     background-color: #AC66CC;
 }
-.wm-dbg-track-10 {
+.wm-dbg-track-10 
+, .track-10 .event
+{
     background-color: #F37121;
 }
-.wm-dbg-track-11 {
+.wm-dbg-track-11 
+, .track-11 .event
+{
     background-color: #F5B461;
 }
-.wm-dbg-track-12 {
+.wm-dbg-track-12 
+, .track-12 .event
+{
     background-color: #D92027;
 }
-.wm-dbg-track-13 {
+.wm-dbg-track-13 
+, .track-13 .event
+{
     background-color: #BC658D;
 }
-.wm-dbg-track-14 {
+.wm-dbg-track-14 
+, .track-14 .event
+{
     background-color: #8D448B;
 }
-.wm-dbg-track-15 {
+.wm-dbg-track-15 
+, .track-15 .event
+{
     background-color: #DF0E62;
 }
-.wm-dbg-track-16 {
+.wm-dbg-track-16 
+, .track-16 .event
+{
     background-color: #FF2E4C;
 }
 

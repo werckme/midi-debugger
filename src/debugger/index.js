@@ -16,6 +16,11 @@ export class WmMidiFileDebugger {
     }
 
     addListView(element) {
+        const view = new ListView(element);
+        this.views.push(view);
+    }
+
+    addPianoRollView(element) {
         const view = new PianoRollView(element);
         this.views.push(view);
     }

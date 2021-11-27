@@ -10,6 +10,7 @@ export class PianoRollView {
     trackFilterElement = null;
     filterItems = null;
     eventList = null;
+    xscale = 100;
     constructor(element) {
         this.element = element;
     }
@@ -37,7 +38,6 @@ export class PianoRollView {
     }
 
     renderEvent(track, event) {
-        const xscale = 100;
         const isNoteOn = event.type === MidiEvents.EVENT_MIDI && event.subtype === MidiEvents.EVENT_MIDI_NOTE_ON;
         const isNoteOff = event.type === MidiEvents.EVENT_MIDI && event.subtype === MidiEvents.EVENT_MIDI_NOTE_OFF;
         if (!isNoteOn && !isNoteOff) {
@@ -61,11 +61,11 @@ export class PianoRollView {
         const eventElement = document.createElement('div');
         eventElement.classList.add("event");
         eventElement.classList.add(`velocity-${noteOn.param2}`);
-        eventElement.style.width = `${noteOn.duration * xscale}px`;
-        eventElement.style.left = `${noteOn.absPosition * xscale}px`;
-        const eventText = eventDataToString(noteOn);
+        eventElement.style.width = `${noteOn.duration * this.xscale}px`;
+        eventElement.style.left = `${noteOn.absPosition * this.xscale}px`;
+        const eventText = `${eventDataToString(noteOn)}${this.eventPosAndDuration(noteOn, event)}`;
         const textElement = document.createElement('span');
-        eventElement.title = `${eventText}${this.eventPosAndDuration(noteOn, event)}`;
+        eventElement.title = 
         textElement.textContent = eventText;
         eventElement.appendChild(textElement);
         pitchContainer.appendChild(eventElement);
@@ -84,16 +84,32 @@ export class PianoRollView {
     }
 
     postProcess(tracks) {
+        const maxWidth = this.xscale * _(tracks)
+            .values()
+            .map(x=>x.pitches)
+            .flatten()
+            .map(x=>x.elements)
+            .map(x=>_.last(x))
+            .filter(x=>!!x)
+            .map(x=>x.absPosition + x.duration)
+            .max();
+
         for(const trackNr in tracks) {
             const track = tracks[trackNr];
-            const pitchElements = _(track.pitches)
-                .map(x=>x.elements)
-                .filter(x=>x.length > 0)
+            const pitchGroupElements = _(track.pitches)
+                .filter(x=>x.elements.length > 0)
+                .map(x=>x.container)
                 .value();
-            if (pitchElements.length === 0) {
+            for(const pitchGroupElement of pitchGroupElements) {
+                pitchGroupElement.classList.add("pitch-group-hasvalue");
+                pitchGroupElement.style.width = `${maxWidth}px`;
+            }
+            if (pitchGroupElements.length === 0) {
                 track.container.classList.add("track-empty");
             }
+            track.container.style.width = `${maxWidth}px`;
         }
+        console.log(maxWidth);
     }
 
     render(midifile) {

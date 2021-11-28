@@ -120,6 +120,7 @@ export class PianoRollView {
             ctx.stroke();
             const text = `${quarters.toFixed(2)}`;
             const textMetrics = ctx.measureText(text);
+            ctx.fillStyle = gridColor;
             ctx.fillText(text, x - textMetrics.width/2, 10);
         }
         container.style.background = `url(${canvas.toDataURL("image/png")})`;

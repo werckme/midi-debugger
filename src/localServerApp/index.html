@@ -8,17 +8,20 @@
     <title>Werckmeister Debugger</title>
 </head>
 <body>
+    <div id="filter"></div>
     <div id="listview"></div>
 </body>
 <script src="index.js"></script>
 <script>
     const dbg = new WmDbg.WmMidiFileDebugger();
     const listview = document.querySelector('#listview');
+    const filter = document.querySelector('#filter');
     fetch('/midifile')
         .then((response) => {
             response.arrayBuffer().then(buffer => {
                 dbg.setMidiFile(buffer);
-                dbg.addListView(listview);
+                dbg.createFilter(filter);
+                dbg.addPianoRollView(listview);
                 dbg.update();
             });
         });

@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack --mode=production && cp package.json dist",
     "watch": "webpack --watch --mode=development",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "node ./src/localServerApp/server.js"
   },
   "repository": {
     "type": "git",

@@ -5,28 +5,15 @@ import * as _ from 'lodash';
 export class ListView {
     element = null;
     ppq = 0;
-    trackFilter = new CheckboxFilterGroup();
-    trackFilterElement = null;
-    filterItems = null;
     eventList = null;
-    constructor(element) {
+    trackFilter;
+    constructor(element, trackFilter) {
         this.element = element;
+        this.trackFilter = trackFilter;
     }
 
     update(midifile) {
         this.element.innerHTML = '';
-        const tracks = getTracks(midifile);
-        const filterItems = tracks.map((x, idx) => ({name: `${x}(${idx})`, value: idx, class_: `wm-dbg-track-${idx}`}));
-        const filterChanged = _(filterItems).isEqual(this.filterItems) === false;
-        let trackFilterElement = null;
-        if (filterChanged) {
-            this.filterItems = filterItems;
-            this.trackFilterElement = this.trackFilter.createElement(this.filterItems);
-        }
-        this.trackFilter.onSelectionChanged = () => {
-            this.render(midifile);
-        };
-        this.element.appendChild(this.trackFilterElement);
         this.ppq = midifile.header.getTicksPerBeat();
         this.render(midifile);
     }
@@ -70,7 +57,7 @@ export class ListView {
         for (const event of midifile.getEvents()) {
             this.quarters += event.delta / this.ppq;
             const isTrackSelected = this.trackFilter.selected[event.track];
-            if (!isTrackSelected) {
+            if (!isTrackSelected && this.trackFilter.initalized) {
                 continue;
             }
             const row = document.createElement("tr");

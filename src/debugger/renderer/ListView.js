@@ -1,19 +1,21 @@
 import { eventDataToString, eventTypeToString, getNumberOfTracks, getTracks } from "./MidiHelper";
 import { CheckboxFilterGroup } from './CheckboxFilterGroup';
 import * as _ from 'lodash';
+import { AView } from "./AView";
 
-export class ListView {
+export class ListView extends AView {
     element = null;
     ppq = 0;
     eventList = null;
     trackFilter;
     constructor(element, trackFilter) {
+        super();
         this.element = element;
         this.trackFilter = trackFilter;
     }
 
     update(midifile) {
-        this.element.innerHTML = '';
+        this.clear();
         this.ppq = midifile.header.getTicksPerBeat();
         this.render(midifile);
     }

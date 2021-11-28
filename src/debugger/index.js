@@ -34,6 +34,13 @@ export class WmMidiFileDebugger {
         this.views.push(view);
     }
 
+    clearViews() {
+        for(const view of this.views) {
+            view.clear();
+        }
+        this.views = [];
+    }
+
     addFilter(element) {
         this.filterParent = element;
     }

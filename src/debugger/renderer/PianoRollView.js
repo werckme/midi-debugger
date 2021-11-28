@@ -1,20 +1,22 @@
 import { eventDataToString, eventTypeToString, midiNumberToNoteNameHtml, getTracks } from "./MidiHelper";
 import * as MidiEvents from 'midievents';
 import * as _ from 'lodash';
+import { AView } from "./AView";
 
-export class PianoRollView {
+export class PianoRollView extends AView {
     element = null;
     ppq = 0;
     eventList = null;
     xscale = 100;
     maxWidth = 0;
     constructor(element, trackFilter) {
+        super();
         this.element = element;
         this.trackFilter = trackFilter;
     }
 
     update(midifile) {
-        this.element.innerHTML = '';
+        this.clear();
         this.ppq = midifile.header.getTicksPerBeat();
         this.render(midifile);
     }

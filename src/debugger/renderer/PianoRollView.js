@@ -2,6 +2,7 @@ import { eventDataToString, eventTypeToString, midiNumberToNoteNameHtml, getTrac
 import * as MidiEvents from 'midievents';
 import { CheckboxFilterGroup } from './CheckboxFilterGroup';
 import * as _ from 'lodash';
+import { capitalize } from "lodash";
 
 export class PianoRollView {
     element = null;
@@ -11,14 +12,16 @@ export class PianoRollView {
     filterItems = null;
     eventList = null;
     xscale = 100;
+    maxWidth = 0;
+    tracks = [];
     constructor(element) {
         this.element = element;
     }
 
     update(midifile) {
         this.element.innerHTML = '';
-        const tracks = getTracks(midifile);
-        const filterItems = tracks.map((x, idx) => ({name: `${x}(${idx})`, value: idx, class_: `wm-dbg-track-${idx}`}));
+        this.tracks = getTracks(midifile);
+        const filterItems = this.tracks.map((x, idx) => ({name: `${x}(${idx})`, value: idx, class_: `wm-dbg-track-${idx}`}));
         const filterChanged = _(filterItems).isEqual(this.filterItems) === false;
         let trackFilterElement = null;
         if (filterChanged) {
@@ -84,7 +87,7 @@ export class PianoRollView {
     }
 
     postProcess(tracks) {
-        const maxWidth = this.xscale * _(tracks)
+        this.maxWidth = this.xscale * _(tracks)
             .values()
             .map(x=>x.pitches)
             .flatten()
@@ -102,19 +105,46 @@ export class PianoRollView {
                 .value();
             for(const pitchGroupElement of pitchGroupElements) {
                 pitchGroupElement.classList.add("pitch-group-hasvalue");
-                pitchGroupElement.style.width = `${maxWidth}px`;
+                pitchGroupElement.style.width = `${this.maxWidth}px`;
             }
             if (pitchGroupElements.length === 0) {
                 track.container.classList.add("track-empty");
             }
-            track.container.style.width = `${maxWidth}px`;
+            track.container.style.width = `${this.maxWidth}px`;
         }
-        console.log(maxWidth);
+    }
+
+    renderGrid(container) {
+        const height = container.clientHeight;
+        const canvas = document.createElement('canvas');
+        const gridStyleDummy = document.createElement('div');
+        gridStyleDummy.classList.add('grid-style');
+        container.appendChild(gridStyleDummy);
+        const gridColor = gridStyleDummy.computedStyleMap().get('color').toString();
+        canvas.width = this.maxWidth;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        container.style.width = `${this.maxWidth}px`;
+        let x = 0;
+        let quarters = 0;
+        while(x <= this.maxWidth) {
+            quarters += 1;
+            x = Math.floor(quarters * this.xscale);
+            ctx.strokeStyle = gridColor;
+            ctx.lineWidth = 1;
+            ctx.moveTo(x, 12);
+            ctx.lineTo(x, height);
+            ctx.stroke();
+            const text = `${quarters.toFixed(2)}`;
+            const textMetrics = ctx.measureText(text);
+            ctx.fillText(text, x - textMetrics.width/2, 10);
+        }
+        container.style.background = `url(${canvas.toDataURL("image/png")})`;
     }
 
     render(midifile) {
         const tracks = {};
-        this.quarters = 0;
+        this.quarters = 1;
         if (!this.eventList) {
             this.eventList = document.createElement("div");
             this.eventList.classList.add("piano-roll");
@@ -131,6 +161,10 @@ export class PianoRollView {
             }
             if (!track) {
                 track = { container: document.createElement("div"), pitches: [] };
+                const title = document.createElement("span");
+                title.classList.add("track-title");
+                title.textContent = this.tracks[event.track];
+                track.container.appendChild(title);
                 this.createPitchGroups(track);
                 track.container.classList.add("track");
                 track.container.classList.add(`track-${event.track}`);
@@ -141,5 +175,6 @@ export class PianoRollView {
         }
         this.postProcess(tracks);
         this.element.appendChild(this.eventList);
+        this.renderGrid(this.eventList);
     }
 }

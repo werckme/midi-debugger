@@ -1,7 +1,9 @@
 export class CheckboxFilterGroup {
     selected = {};
+    initalized = false;
     onSelectionChanged = () => {};
     createElement(checkboxItems) {
+        this.initalized = true;
         const div = document.createElement("div");
         div.className = "chkbx-grp";
         for(const item of checkboxItems) {

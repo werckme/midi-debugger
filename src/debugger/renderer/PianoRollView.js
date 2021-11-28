@@ -1,37 +1,20 @@
 import { eventDataToString, eventTypeToString, midiNumberToNoteNameHtml, getTracks } from "./MidiHelper";
 import * as MidiEvents from 'midievents';
-import { CheckboxFilterGroup } from './CheckboxFilterGroup';
 import * as _ from 'lodash';
-import { capitalize } from "lodash";
 
 export class PianoRollView {
     element = null;
     ppq = 0;
-    trackFilter = new CheckboxFilterGroup();
-    trackFilterElement = null;
-    filterItems = null;
     eventList = null;
     xscale = 100;
     maxWidth = 0;
-    tracks = [];
-    constructor(element) {
+    constructor(element, trackFilter) {
         this.element = element;
+        this.trackFilter = trackFilter;
     }
 
     update(midifile) {
         this.element.innerHTML = '';
-        this.tracks = getTracks(midifile);
-        const filterItems = this.tracks.map((x, idx) => ({name: `${x}(${idx})`, value: idx, class_: `wm-dbg-track-${idx}`}));
-        const filterChanged = _(filterItems).isEqual(this.filterItems) === false;
-        let trackFilterElement = null;
-        if (filterChanged) {
-            this.filterItems = filterItems;
-            this.trackFilterElement = this.trackFilter.createElement(this.filterItems);
-        }
-        this.trackFilter.onSelectionChanged = () => {
-            this.render(midifile);
-        };
-        this.element.appendChild(this.trackFilterElement);
         this.ppq = midifile.header.getTicksPerBeat();
         this.render(midifile);
     }
@@ -156,14 +139,14 @@ export class PianoRollView {
             event.absPosition = this.quarters;
             let track = tracks[event.track];
             const isTrackSelected = this.trackFilter.selected[event.track];
-            if (!isTrackSelected) {
+            if (!isTrackSelected && this.trackFilter.initalized) {
                 continue;
             }
             if (!track) {
                 track = { container: document.createElement("div"), pitches: [] };
                 const title = document.createElement("span");
                 title.classList.add("track-title");
-                title.textContent = this.tracks[event.track];
+                title.textContent = midifile.trackNames[event.track];
                 track.container.appendChild(title);
                 this.createPitchGroups(track);
                 track.container.classList.add("track");

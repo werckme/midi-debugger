@@ -13,6 +13,7 @@ export class WmMidiFileDebugger {
     trackFilter = new CheckboxFilterGroup();
     trackFilterElement = null;
     filterItems = null;
+    filterParent = null;
     constructor() {
         window.wmDbg = this;
     }
@@ -33,10 +34,15 @@ export class WmMidiFileDebugger {
         this.views.push(view);
     }
 
+    addFilter(element) {
+        this.filterParent = element;
+    }
+
     update() {
         for(const view of this.views) {
             view.update(this.midifile);
         }
+        this.updateFilter();
     }
 
     renderViews() {
@@ -45,7 +51,11 @@ export class WmMidiFileDebugger {
         }
     }
 
-    createFilter(element) {
+    updateFilter() {
+        if (!this.filterParent) {
+            return;
+        }
+        const element = this.filterParent;
         element.innerHTML = '';
         const filterItems = this.midifile.trackNames.map((x, idx) => ({name: `${x}(${idx})`, value: idx, class_: `wm-dbg-track-${idx}`}));
         const filterChanged = _(filterItems).isEqual(this.filterItems) === false;

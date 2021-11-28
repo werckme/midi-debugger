@@ -20,7 +20,7 @@
         .then((response) => {
             response.arrayBuffer().then(buffer => {
                 dbg.setMidiFile(buffer);
-                dbg.createFilter(filter);
+                dbg.addFilter(filter);
                 dbg.addPianoRollView(listview);
                 dbg.update();
             });

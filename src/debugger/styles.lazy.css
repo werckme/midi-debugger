@@ -11,6 +11,7 @@
 
 .piano-roll .grid-style {
     color: lightgrey;
+    background-color: red;
 }
 
 .track + .track {

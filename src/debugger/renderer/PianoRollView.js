@@ -103,7 +103,8 @@ export class PianoRollView {
         const gridStyleDummy = document.createElement('div');
         gridStyleDummy.classList.add('grid-style');
         container.appendChild(gridStyleDummy);
-        const gridColor = gridStyleDummy.computedStyleMap().get('color').toString();
+        const gridStrokeColor = gridStyleDummy.computedStyleMap().get('color').toString();
+        const gridFillColor = gridStyleDummy.computedStyleMap().get('background-color').toString();
         canvas.width = this.maxWidth;
         canvas.height = height;
         const ctx = canvas.getContext('2d');
@@ -113,14 +114,14 @@ export class PianoRollView {
         while(x <= this.maxWidth) {
             quarters += 1;
             x = Math.floor(quarters * this.xscale);
-            ctx.strokeStyle = gridColor;
+            ctx.strokeStyle = gridStrokeColor;
             ctx.lineWidth = 1;
             ctx.moveTo(x, 12);
             ctx.lineTo(x, height);
             ctx.stroke();
             const text = `${quarters.toFixed(2)}`;
             const textMetrics = ctx.measureText(text);
-            ctx.fillStyle = gridColor;
+            ctx.fillStyle = gridFillColor;
             ctx.fillText(text, x - textMetrics.width/2, 10);
         }
         container.style.background = `url(${canvas.toDataURL("image/png")})`;

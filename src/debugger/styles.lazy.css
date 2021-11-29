@@ -47,7 +47,7 @@
     justify-content: center;
     flex-direction: column;
     position: relative;
-    height: 20px;
+    height: 25px;
     border-bottom: 1px dashed rgba(0, 0, 0, 0.2);
 }
 
@@ -57,7 +57,7 @@
     position: absolute;
     background-color: red;
     border: 1px solid black;
-    height: 10px;
+    height: 13px;
     padding: 0px 0;
     cursor: default;
 }
@@ -68,7 +68,7 @@
 
 .piano-roll .event span {
     color: black;
-    font-size: 10px;
+    font-size: 12px;
     font-family: monospace;
     white-space: nowrap;
     overflow: hidden;

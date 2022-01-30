@@ -22,7 +22,7 @@ export class PianoRollView extends AView {
     }
 
     eventPosAndDuration(noteOn, noteOff) {
-        return `@${noteOn.absPosition.toFixed(3)} - ${noteOff.absPosition.toFixed(3)}`;
+        return ` ${noteOn.absPosition.toFixed(3)} - ${noteOff.absPosition.toFixed(3)}`;
     }
 
     renderEvent(track, event) {
@@ -81,7 +81,6 @@ export class PianoRollView extends AView {
             .filter(x=>!!x)
             .map(x=>x.absPosition + x.duration)
             .max();
-
         for(const trackNr in tracks) {
             const track = tracks[trackNr];
             const pitchGroupElements = _(track.pitches)
@@ -141,8 +140,8 @@ export class PianoRollView extends AView {
         for (const event of midifile.getEvents()) {
             this.quarters += event.delta / this.ppq;
             event.absPosition = this.quarters;
-            let track = tracks[event.track];
-            const isTrackSelected = this.trackFilter.selected[event.track];
+            let track = tracks[event.track||0];
+            const isTrackSelected = this.trackFilter.selected[event.track || 0];
             if (!isTrackSelected && this.trackFilter.initalized) {
                 continue;
             }
@@ -150,12 +149,12 @@ export class PianoRollView extends AView {
                 track = { container: document.createElement("div"), pitches: [] };
                 const title = document.createElement("span");
                 title.classList.add("track-title");
-                title.textContent = midifile.trackNames[event.track];
+                title.textContent = midifile.trackNames[event.track || 0];
                 track.container.appendChild(title);
                 this.createPitchGroups(track);
                 track.container.classList.add("track");
-                track.container.classList.add(`track-${event.track}`);
-                tracks[event.track] = track;
+                track.container.classList.add(`track-${event.track || 0}`);
+                tracks[event.track || 0] = track;
                 this.eventList.appendChild(track.container);
             }
             this.renderEvent(track, event);

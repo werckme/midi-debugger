@@ -21,6 +21,7 @@
             response.arrayBuffer().then(buffer => {
                 dbg.setMidiFile(buffer);
                 dbg.addFilter(filter);
+                //dbg.addListView(listview);
                 dbg.addPianoRollView(listview);
                 dbg.update();
             });

@@ -28,9 +28,9 @@ export class ListView extends AView {
 
     renderEvent(container, event) {
         const type = eventTypeToString(event);
-        container.classList.add(`wm-dbg-track-${event.track}`);
+        container.classList.add(`wm-dbg-track-${event.track||0}`);
         container.classList.add(_.kebabCase(type));
-        this.addDate(container, event.track);
+        this.addDate(container, event.track||0);
         this.addDate(container, this.quarters.toFixed(6));
         this.addDate(container, event.channel !== undefined ? event.channel : "-");
         this.addDate(container, type);
@@ -58,7 +58,7 @@ export class ListView extends AView {
         this.eventList.appendChild(tbody);
         for (const event of midifile.getEvents()) {
             this.quarters += event.delta / this.ppq;
-            const isTrackSelected = this.trackFilter.selected[event.track];
+            const isTrackSelected = this.trackFilter.selected[event.track||0];
             if (!isTrackSelected && this.trackFilter.initalized) {
                 continue;
             }

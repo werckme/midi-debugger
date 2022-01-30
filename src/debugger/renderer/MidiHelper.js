@@ -50,7 +50,7 @@ export function eventDataToString(event) {
     if (event.type === MidiEvents.EVENT_MIDI
         && (event.subtype === MidiEvents.EVENT_MIDI_NOTE_ON
             || event.subtype === MidiEvents.EVENT_MIDI_NOTE_OFF)) {
-        return `${midiNumberToNoteName(event.param1)} ${event.param2}`;
+        return `${midiNumberToNoteName(event.param1)}(${event.param2})`;
     }
     if (event.type === MidiEvents.EVENT_META && event.subtype === MidiEvents.EVENT_META_TIME_SIGNATURE) {
         return `${event.param1}/${Math.round(Math.exp(event.param2 * Math.log(2)))}`;
@@ -85,7 +85,7 @@ export function getNumberOfTracks(midifile) {
 export function getTracks(midifile) {
     const trackskWithName = [];
     for (const event of midifile.getEvents()) {
-        const key = event.track;
+        const key = event.track || 0;
         if (!trackskWithName[key]) {
             trackskWithName[key] = "unknown";
         }

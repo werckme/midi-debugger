@@ -30,7 +30,7 @@ export class DataFlowView extends ListView {
         eventsContainer.className = "events";
         this.eventList.appendChild(eventsContainer);
         for (const event of midifile.getEvents()) {
-            const isTrackSelected = this.trackFilter.selected[event.track];
+            const isTrackSelected = this.trackFilter.selected[event.track || 0];
             if (!isTrackSelected) {
                 continue;
             }

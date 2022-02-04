@@ -123,7 +123,7 @@ export class PianoRollView extends AView {
             ctx.moveTo(x, 12);
             ctx.lineTo(x, height);
             ctx.stroke();
-            const text = `${quarters.toFixed(2)}`;
+            const text = `${quarters.toFixed(2)-1}`;
             const textMetrics = ctx.measureText(text);
             ctx.fillStyle = gridFillColor;
             ctx.fillText(text, x - textMetrics.width/2, 10);

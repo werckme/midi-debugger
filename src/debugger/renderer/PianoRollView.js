@@ -40,6 +40,9 @@ export class PianoRollView extends AView {
         const pitches = track.pitches[eventPitch];
         const pitchContainer = pitches.container;
         const noteOn = _.last(pitches.elements);
+        if (!noteOn) {
+            return;
+        }
         const noteHasAlreadyDuration = noteOn.duration !== undefined;
         if (noteHasAlreadyDuration) {
             console.warn(`corresponding midi on note not found`)

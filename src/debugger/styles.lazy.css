@@ -76,6 +76,20 @@
     cursor: default;
 }
 
+.piano-roll .cues {
+    position: relative;
+}
+
+.piano-roll .cues .cue-event {
+    position: absolute;
+    z-index: 10;
+    background-color: yellow;
+    box-shadow: 0 0 0px 2px black;
+    width: 15px;
+    height: 15px;
+    clip-path: polygon(0% 0%, 100% 0, 100% 65%, 48% 100%, 0 65%);
+}
+
 
 /* LIST VIEW */
 .wm-dbg-listview {

@@ -3,6 +3,8 @@ import { CheckboxFilterGroup } from './CheckboxFilterGroup';
 import * as _ from 'lodash';
 import { AView } from "./AView";
 
+const eventTextChildIndex = 4;
+
 export class ListView extends AView {
     element = null;
     ppq = 0;
@@ -35,9 +37,20 @@ export class ListView extends AView {
         this.addDate(container, event.channel !== undefined ? event.channel : "-");
         this.addDate(container, type);
         this.addDate(container, eventDataToString(event));
+    
     }
+
+    updateEventLabelImpl(element, htmlText) {
+        element.childNodes[eventTextChildIndex].innerHTML = htmlText;
+    }
+
+    getEventLabelImpl(element) {
+        return element.childNodes[eventTextChildIndex].innerHTML;
+    }
+
     quarters = 0;
     render(midifile) {
+        this.beginRender();
         this.quarters = 0;
         if (!this.eventList) {
             this.eventList = document.createElement("table");
@@ -57,15 +70,19 @@ export class ListView extends AView {
         const tbody = document.createElement("tbody");
         this.eventList.appendChild(tbody);
         for (const event of midifile.getEvents()) {
+            const trackIndex = event.track || 0;
+            this.visitTrack(trackIndex);
             this.quarters += event.delta / this.ppq;
-            const isTrackSelected = this.trackFilter.selected[event.track||0];
+            const isTrackSelected = this.trackFilter.selected[trackIndex];
             if (!isTrackSelected && this.trackFilter.initalized) {
                 continue;
             }
             const row = document.createElement("tr");
             tbody.appendChild(row);
             this.renderEvent(row, event);
+            this.visitEventElement(trackIndex, row);
         }
         this.element.appendChild(this.eventList);
+        this.endRender();
     }
 }

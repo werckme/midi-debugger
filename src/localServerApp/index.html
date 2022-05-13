@@ -13,18 +13,32 @@
 </body>
 <script src="index.js"></script>
 <script>
+    'use strict';
     const dbg = new WmDbg.WmMidiFileDebugger();
     const listview = document.querySelector('#listview');
     const filter = document.querySelector('#filter');
+    const updatePitchAliases = function(view, debugInfoJson) {
+        const infosWithPitchAlias = debugInfoJson.filter(x => !!x.pitchAlias);
+        for(const info of infosWithPitchAlias) {
+            const trackId = info.trackId;
+            const eventId = info.eventId;
+            const oldLabel = view.getEventLabelHtmlText(trackId, eventId);
+            view.updateEventLabelHtmlText(trackId, eventId, `${info.pitchAlias} aka. ${oldLabel}`);
+            //view.updateEventLabelHtmlText(trackId, eventId, `${info.pitchAlias}`);
+        }
+    };
     fetch('/midifile')
-        .then((response) => {
-            response.arrayBuffer().then(buffer => {
-                dbg.setMidiFile(buffer);
-                dbg.addFilter(filter);
-                //dbg.addListView(listview);
-                dbg.addPianoRollView(listview);
-                dbg.update();
-            });
+        .then(async (response) => {
+            const buffer = await response.arrayBuffer();
+            const dbgInfoRequest = await fetch('/debugInfoJson');
+            const debInfoJson = await dbgInfoRequest.json();
+            dbg.setMidiFile(buffer);
+            dbg.addFilter(filter);
+            dbg.addListView(listview);
+            //dbg.addPianoRollView(listview);
+            dbg.views[0].onUpdated = () => setTimeout(updatePitchAliases.bind(null, dbg.views[0], debInfoJson));
+            dbg.update();
+            console.log(dbg.views[0].eventToElementMap)
         });
 </script>
 <style>

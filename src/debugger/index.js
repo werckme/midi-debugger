@@ -1,3 +1,4 @@
+'use strict';
 import * as MidiFileModule from "midifile";
 import { DataFlowView } from "./renderer/DataFlowView";
 import { PianoRollView } from "./renderer/PianoRollView";

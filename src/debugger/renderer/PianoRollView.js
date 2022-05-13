@@ -3,12 +3,15 @@ import * as MidiEvents from 'midievents';
 import * as _ from 'lodash';
 import { AView } from "./AView";
 
+const eventTextChildIndex = 0;
+
 export class PianoRollView extends AView {
     element = null;
     ppq = 0;
     eventList = null;
     xscale = 100;
     maxWidth = 0;
+    quarters = 0;
     constructor(element, trackFilter) {
         super();
         this.element = element;
@@ -25,9 +28,21 @@ export class PianoRollView extends AView {
         return ` ${noteOn.absPosition.toFixed(3)} - ${noteOff.absPosition.toFixed(3)}`;
     }
 
+    updateEventLabelImpl(element, htmlText) {
+        element.childNodes[eventTextChildIndex].innerHTML = htmlText;
+    }
+
+    getEventLabelImpl(element) {
+        return element.childNodes[eventTextChildIndex].innerHTML;
+    }
+
     renderEvent(track, event) {
         const isNoteOn = event.type === MidiEvents.EVENT_MIDI && event.subtype === MidiEvents.EVENT_MIDI_NOTE_ON;
         const isNoteOff = event.type === MidiEvents.EVENT_MIDI && event.subtype === MidiEvents.EVENT_MIDI_NOTE_OFF;
+        const isCue = event.type === MidiEvents.EVENT_META && event.subtype === MidiEvents.EVENT_META_CUE_POINT;
+        if (isCue) {
+            return;
+        }
         if (!isNoteOn && !isNoteOff) {
             return;
         }
@@ -56,12 +71,12 @@ export class PianoRollView extends AView {
         eventElement.style.left = `${noteOn.absPosition * this.xscale}px`;
         const eventText = `${eventDataToString(noteOn)}${this.eventPosAndDuration(noteOn, event)}`;
         const textElement = document.createElement('span');
-        eventElement.title = 
+        eventElement.title = "";
         textElement.textContent = eventText;
         eventElement.appendChild(textElement);
         pitchContainer.appendChild(eventElement);
+        return eventElement;
     }
-    quarters = 0;
 
     createPitchGroups(track) {
         for(let pitch=127; pitch >= 0; --pitch) {
@@ -131,19 +146,28 @@ export class PianoRollView extends AView {
         container.style.background = `url(${canvas.toDataURL("image/png")})`;
     }
 
+    cueContainer = undefined;
+
     render(midifile) {
+        this.beginRender();
         const tracks = {};
         this.quarters = 1;
         if (!this.eventList) {
             this.eventList = document.createElement("div");
             this.eventList.classList.add("piano-roll");
+            this.cueContainer = document.createElement("div");
+            this.cueContainer.classList.add("cues");
+            this.eventList.appendChild(this.cueContainer);
         } else {
             this.eventList.innerHTML = '';
+            this.cueContainer.innerHTML = '';
         }
         for (const event of midifile.getEvents()) {
             this.quarters += event.delta / this.ppq;
             event.absPosition = this.quarters;
-            let track = tracks[event.track||0];
+            const trackIndex = event.track || 0;
+            let track = tracks[trackIndex];
+            this.visitTrack(trackIndex);
             const isTrackSelected = this.trackFilter.selected[event.track || 0];
             if (!isTrackSelected && this.trackFilter.initalized) {
                 continue;
@@ -160,10 +184,12 @@ export class PianoRollView extends AView {
                 tracks[event.track || 0] = track;
                 this.eventList.appendChild(track.container);
             }
-            this.renderEvent(track, event);
+            const eventElement = this.renderEvent(track, event);
+            this.visitEventElement(trackIndex, eventElement);
         }
         this.postProcess(tracks);
         this.element.appendChild(this.eventList);
         this.renderGrid(this.eventList);
+        this.endRender();
     }
 }

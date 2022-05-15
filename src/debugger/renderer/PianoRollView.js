@@ -31,7 +31,9 @@ export class PianoRollView extends AView {
     }
 
     updateEventLabelImpl(element, htmlText) {
-        element.childNodes[eventTextChildIndex].innerHTML = htmlText;
+        const labelElement = element.childNodes[eventTextChildIndex];
+        labelElement.innerHTML = htmlText;
+        labelElement.title = labelElement.textContent;
     }
 
     getEventLabelImpl(element) {
@@ -50,7 +52,7 @@ export class PianoRollView extends AView {
         eventElement.style.left = `${event.absPosition * this.xscale}px`;
         const eventText = `⚑ ${eventDataToString(event)}`;
         const textElement = document.createElement('span');
-        eventElement.title = "";
+        eventElement.title = eventText;
         textElement.textContent = eventText;
         eventElement.appendChild(textElement);
         pitchContainer.appendChild(eventElement);

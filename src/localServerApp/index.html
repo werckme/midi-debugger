@@ -23,8 +23,8 @@
             const trackId = info.trackId;
             const eventId = info.eventId;
             const oldLabel = view.getEventLabelHtmlText(trackId, eventId);
-            view.updateEventLabelHtmlText(trackId, eventId, `${info.pitchAlias} aka. ${oldLabel}`);
-            //view.updateEventLabelHtmlText(trackId, eventId, `${info.pitchAlias}`);
+            //view.updateEventLabelHtmlText(trackId, eventId, `${info.pitchAlias} aka. ${oldLabel}`);
+            view.updateEventLabelHtmlText(trackId, eventId, `${info.pitchAlias}`);
         }
     };
     fetch('/midifile')
@@ -34,8 +34,8 @@
             const debInfoJson = await dbgInfoRequest.json();
             dbg.setMidiFile(buffer);
             dbg.addFilter(filter);
-            dbg.addListView(listview);
-            //dbg.addPianoRollView(listview);
+            //dbg.addListView(listview);
+            dbg.addPianoRollView(listview);
             dbg.views[0].onUpdated = () => setTimeout(updatePitchAliases.bind(null, dbg.views[0], debInfoJson));
             dbg.update();
             console.log(dbg.views[0].eventToElementMap)

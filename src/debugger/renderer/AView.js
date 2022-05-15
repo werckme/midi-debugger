@@ -41,6 +41,15 @@ export class AView {
         }
         this.updateEventLabelImpl(element, htmlText);
     }
+
+    getEventElement(trackIndex, eventIndex) {
+        const element = (this.eventToElementMap[trackIndex]||[])[eventIndex];
+        if (!element) {
+            return null;
+        }
+        return element;
+    }
+    
     /**
      * abstract
      */

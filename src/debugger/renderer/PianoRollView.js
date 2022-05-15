@@ -5,6 +5,8 @@ import { AView } from "./AView";
 
 const eventTextChildIndex = 0;
 
+const cuePitchIndex = 0;
+
 export class PianoRollView extends AView {
     element = null;
     ppq = 0;
@@ -36,12 +38,31 @@ export class PianoRollView extends AView {
         return element.childNodes[eventTextChildIndex].innerHTML;
     }
 
+    renderCue(track, event) {
+        const pitches = track.pitches[cuePitchIndex];
+        pitches.elements.push(event);
+        const pitchContainer = pitches.container;
+        const eventElement = document.createElement('div');
+        eventElement.classList.add("event");
+        eventElement.classList.add(`velocity-127`);
+        eventElement.classList.add(`event-cue`);
+        eventElement.style.width = `${1 * this.xscale}px`;
+        eventElement.style.left = `${event.absPosition * this.xscale}px`;
+        const eventText = `⚑ ${eventDataToString(event)}`;
+        const textElement = document.createElement('span');
+        eventElement.title = "";
+        textElement.textContent = eventText;
+        eventElement.appendChild(textElement);
+        pitchContainer.appendChild(eventElement);
+        return eventElement;
+    }
+
     renderEvent(track, event) {
         const isNoteOn = event.type === MidiEvents.EVENT_MIDI && event.subtype === MidiEvents.EVENT_MIDI_NOTE_ON;
         const isNoteOff = event.type === MidiEvents.EVENT_MIDI && event.subtype === MidiEvents.EVENT_MIDI_NOTE_OFF;
         const isCue = event.type === MidiEvents.EVENT_META && event.subtype === MidiEvents.EVENT_META_CUE_POINT;
         if (isCue) {
-            return;
+            return this.renderCue(track, event);
         }
         if (!isNoteOn && !isNoteOff) {
             return;
@@ -79,14 +100,18 @@ export class PianoRollView extends AView {
     }
 
     createPitchGroups(track) {
-        for(let pitch=127; pitch >= 0; --pitch) {
+        const createPitchElement = (pitch) => {
             const pitchName = midiNumberToNoteNameHtml(pitch);
             const pitchContainer = document.createElement('div');
             pitchContainer.classList.add("pitch-group");
             pitchContainer.classList.add(pitchName);
             track.pitches[pitch] = {elements: [], container: pitchContainer};
             track.container.appendChild(pitchContainer);
+        };
+        for(let pitch=127; pitch >= 0; --pitch) {
+            createPitchElement(pitch);
         }
+        createPitchElement(cuePitchIndex);
     }
 
     postProcess(tracks) {

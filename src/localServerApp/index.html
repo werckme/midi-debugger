@@ -38,7 +38,6 @@
             dbg.addPianoRollView(listview);
             dbg.views[0].onUpdated = () => setTimeout(updatePitchAliases.bind(null, dbg.views[0], debInfoJson));
             dbg.update();
-            console.log(dbg.views[0].eventToElementMap)
         });
 </script>
 <style>

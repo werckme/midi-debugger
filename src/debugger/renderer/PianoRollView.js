@@ -94,7 +94,7 @@ export class PianoRollView extends AView {
         eventElement.style.left = `${noteOn.absPosition * this.xscale}px`;
         const eventText = `${eventDataToString(noteOn)}${this.eventPosAndDuration(noteOn, event)}`;
         const textElement = document.createElement('span');
-        eventElement.title = "";
+        eventElement.title = eventText;
         textElement.textContent = eventText;
         eventElement.appendChild(textElement);
         pitchContainer.appendChild(eventElement);

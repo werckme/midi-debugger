@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 export class AView {
     element = null;
     /**
@@ -48,6 +50,22 @@ export class AView {
             return null;
         }
         return element;
+    }
+
+    findEventIndices(element) {
+        for(let trackIndex = 0; trackIndex < this.eventToElementMap.length; ++trackIndex) {
+            const eventElements = this.eventToElementMap[trackIndex];
+            if (!eventElements) {
+                continue;
+            }
+            for(let eventIndex = 0; eventIndex < eventElements.length; ++eventIndex) {
+                const elementToCheck = eventElements[eventIndex];
+                if (element === elementToCheck) {
+                    return {trackIndex, eventIndex};
+                }
+            }
+        }
+        return null;
     }
     
     /**

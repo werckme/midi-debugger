@@ -15,6 +15,7 @@ export class WmMidiFileDebugger {
     trackFilterElement = null;
     filterItems = null;
     filterParent = null;
+    onFilterUpdated = () => {};
     constructor() {
         window.wmDbg = this;
     }
@@ -73,6 +74,7 @@ export class WmMidiFileDebugger {
         }
         this.trackFilter.onSelectionChanged = () => {
             this.renderViews();
+            this.onFilterUpdated();
         };
         element.appendChild(this.trackFilterElement);
     }

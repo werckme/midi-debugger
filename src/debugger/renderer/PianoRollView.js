@@ -69,6 +69,7 @@ export class PianoRollView extends AView {
         if (!isNoteOn && !isNoteOff) {
             return;
         }
+        const eventLeft = event.absPosition * this.xscale;
         const eventPitch = event.param1;
         if (isNoteOn) {
             let pitchGroup = track.pitches[eventPitch];
@@ -90,8 +91,8 @@ export class PianoRollView extends AView {
         const eventElement = document.createElement('div');
         eventElement.classList.add("event");
         eventElement.classList.add(`velocity-${noteOn.param2}`);
-        eventElement.style.width = `${noteOn.duration * this.xscale}px`;
-        eventElement.style.left = `${noteOn.absPosition * this.xscale}px`;
+        eventElement.style.width = `${event.duration * this.xscale}px`;
+        eventElement.style.left = `${eventLeft}px`;
         const eventText = `${eventDataToString(noteOn)}${this.eventPosAndDuration(noteOn, event)}`;
         const textElement = document.createElement('span');
         eventElement.title = eventText;
@@ -145,32 +146,32 @@ export class PianoRollView extends AView {
 
     renderGrid(container) {
         const height = container.clientHeight;
-        const canvas = document.createElement('canvas');
-        const gridStyleDummy = document.createElement('div');
-        gridStyleDummy.classList.add('grid-style');
-        container.appendChild(gridStyleDummy);
-        const gridStrokeColor = gridStyleDummy.computedStyleMap().get('color').toString();
-        const gridFillColor = gridStyleDummy.computedStyleMap().get('background-color').toString();
+        const canvas = document.createElement('div');
+        canvas.style.position = "absolute";
+        canvas.style.top = "0px";
+        canvas.classList.add('grid-style');
+        container.appendChild(canvas);
         canvas.width = this.maxWidth;
         canvas.height = height;
-        const ctx = canvas.getContext('2d');
         container.style.width = `${this.maxWidth}px`;
         let x = 0;
         let quarters = 0;
         while(x <= this.maxWidth) {
             quarters += 1;
-            x = Math.floor(quarters * this.xscale);
-            ctx.strokeStyle = gridStrokeColor;
-            ctx.lineWidth = 1;
-            ctx.moveTo(x, 12);
-            ctx.lineTo(x, height);
-            ctx.stroke();
-            const text = `${quarters.toFixed(2)-1}`;
-            const textMetrics = ctx.measureText(text);
-            ctx.fillStyle = gridFillColor;
-            ctx.fillText(text, x - textMetrics.width/2, 10);
+            x = quarters * this.xscale;
+            const gridDiv = document.createElement('div');
+            const gridLabel = document.createElement('div');
+            gridLabel.innerHTML = `${quarters.toFixed(2)-1}`;
+            gridDiv.appendChild(gridLabel);
+            gridLabel.style.position = "absolute";
+            gridDiv.classList.add('grid-element');
+            gridDiv.style.position = "absolute";
+            gridDiv.style.left = `${x}px`;
+            gridDiv.style.width = `2px`;
+            gridDiv.style.top = "0px";
+            gridDiv.style.height = `${height}px`;
+            canvas.appendChild(gridDiv);
         }
-        container.style.background = `url(${canvas.toDataURL("image/png")})`;
     }
 
     cueContainer = undefined;

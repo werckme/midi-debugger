@@ -76,4 +76,9 @@ export class AView {
      * abstract
      */    
     getEventLabelImpl(element) {}
+
+    /**
+     * abstract
+     */    
+    render(midifile) {}
 }

@@ -14,6 +14,7 @@
 <script src="index.js"></script>
 <script>
     'use strict';
+    const beginTime = new Date();
     const dbg = new WmDbg.WmMidiFileDebugger();
     const listview = document.querySelector('#listview');
     const filter = document.querySelector('#filter');
@@ -36,8 +37,10 @@
             dbg.addFilter(filter);
             //dbg.addListView(listview);
             dbg.addPianoRollView(listview);
-            dbg.views[0].onUpdated = () => setTimeout(updatePitchAliases.bind(null, dbg.views[0], debInfoJson));
+            //dbg.views[0].onUpdated = () => setTimeout(updatePitchAliases.bind(null, dbg.views[0], debInfoJson));
             dbg.update();
+            const elapsed = new Date() - beginTime;
+            console.log("OK", elapsed)
         });
 </script>
 <style>

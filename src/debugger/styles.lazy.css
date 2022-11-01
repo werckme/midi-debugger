@@ -11,8 +11,13 @@
 }
 
 .piano-roll .grid-style {
-    color: lightgrey;
+    color: red;
     background-color: red;
+    font-size: 12px;
+}
+
+.piano-roll .grid-style .grid-element {
+    background: rgba(0, 0, 0, 0.1);
 }
 
 .track + .track {

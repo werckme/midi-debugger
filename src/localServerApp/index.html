@@ -35,8 +35,8 @@
             const debInfoJson = await dbgInfoRequest.json();
             dbg.setMidiFile(buffer);
             dbg.addFilter(filter);
-            //dbg.addListView(listview);
-            dbg.addPianoRollView(listview);
+            dbg.addListView(listview);
+            //dbg.addPianoRollView(listview);
             //dbg.views[0].onUpdated = () => setTimeout(updatePitchAliases.bind(null, dbg.views[0], debInfoJson));
             dbg.update();
             const elapsed = new Date() - beginTime;

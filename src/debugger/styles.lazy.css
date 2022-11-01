@@ -96,6 +96,10 @@
     clip-path: polygon(0% 0%, 100% 0, 100% 65%, 48% 100%, 0 65%);
 }
 
+.found-by-search {
+    border: 2px solid yellow;
+}
+
 
 /* LIST VIEW */
 .wm-dbg-listview {

@@ -78,6 +78,18 @@ export class WmMidiFileDebugger {
         };
         element.appendChild(this.trackFilterElement);
     }
+
+    search(term) {
+        for(const view of this.views) {
+            view.search(term);
+        } 
+    }
+
+    clearSearch(term) {
+        for(const view of this.views) {
+            view.clearSearch();
+        } 
+    }
 }
 
 css.use();

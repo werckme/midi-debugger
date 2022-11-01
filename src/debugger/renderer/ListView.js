@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import { AView } from "./AView";
 
 const eventTextChildIndex = 4;
+const foundBySearch = 'found-by-search';
 
 export class ListView extends AView {
     element = null;
@@ -14,6 +15,24 @@ export class ListView extends AView {
         super();
         this.element = element;
         this.trackFilter = trackFilter;
+    }
+
+    clearSearch() {
+        const rows = document.querySelectorAll(`.${foundBySearch}`);
+        for(const row of rows) {
+            row.classList.remove(foundBySearch);
+        }
+    }
+
+    search(term) {
+        this.clearSearch();
+        const rows = document.querySelectorAll('.wm-dbg-listview tbody tr');
+        for(const row of rows) {
+            if (!row.innerText.includes(term)) {
+                continue;
+            }
+            row.classList.add(foundBySearch);
+        }
     }
 
     update(midifile) {

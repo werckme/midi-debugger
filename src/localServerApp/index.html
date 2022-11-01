@@ -16,6 +16,7 @@
     'use strict';
     const beginTime = new Date();
     const dbg = new WmDbg.WmMidiFileDebugger();
+    window.search = dbg.search.bind(dbg);
     const listview = document.querySelector('#listview');
     const filter = document.querySelector('#filter');
     const updatePitchAliases = function(view, debugInfoJson) {

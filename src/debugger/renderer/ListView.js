@@ -26,6 +26,10 @@ export class ListView extends AView {
 
     search(term) {
         this.clearSearch();
+        term = (term || '').trim();
+        if (!term) {
+            return;
+        }
         const rows = document.querySelectorAll('.wm-dbg-listview tbody tr');
         for(const row of rows) {
             if (!row.innerText.includes(term)) {

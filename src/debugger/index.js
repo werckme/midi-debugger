@@ -85,7 +85,7 @@ export class WmMidiFileDebugger {
         } 
     }
 
-    clearSearch(term) {
+    clearSearch() {
         for(const view of this.views) {
             view.clearSearch();
         } 

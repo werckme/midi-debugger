@@ -31,10 +31,16 @@ export class ListView extends AView {
             return;
         }
         const rows = document.querySelectorAll('.wm-dbg-listview tbody tr');
+        const results = [];
+        // don't know why having two arrays is faster than the previous version 
+        // where filter and adding the class was done in one for loop (it crashes with a higher amount of matches)
         for(const row of rows) {
             if (!row.innerText.includes(term)) {
                 continue;
             }
+            results.push(row);
+        }
+        for(const row of results) {
             row.classList.add(foundBySearch);
         }
     }

@@ -69,7 +69,6 @@ export class PianoRollView extends AView {
         if (!isNoteOn && !isNoteOff) {
             return;
         }
-        const eventLeft = event.absPosition * this.xscale;
         const eventPitch = event.param1;
         if (isNoteOn) {
             let pitchGroup = track.pitches[eventPitch];
@@ -91,8 +90,8 @@ export class PianoRollView extends AView {
         const eventElement = document.createElement('div');
         eventElement.classList.add("event");
         eventElement.classList.add(`velocity-${noteOn.param2}`);
-        eventElement.style.width = `${event.duration * this.xscale}px`;
-        eventElement.style.left = `${eventLeft}px`;
+        eventElement.style.width = `${noteOn.duration * this.xscale}px`;
+        eventElement.style.left = `${noteOn.absPosition * this.xscale}px`;
         const eventText = `${eventDataToString(noteOn)}${this.eventPosAndDuration(noteOn, event)}`;
         const textElement = document.createElement('span');
         eventElement.title = eventText;
@@ -156,12 +155,12 @@ export class PianoRollView extends AView {
         container.style.width = `${this.maxWidth}px`;
         let x = 0;
         let quarters = 0;
-        while(x <= this.maxWidth) {
+        while(x < this.maxWidth) {
             quarters += 1;
             x = quarters * this.xscale;
             const gridDiv = document.createElement('div');
             const gridLabel = document.createElement('div');
-            gridLabel.innerHTML = `${quarters.toFixed(2)-1}`;
+            gridLabel.innerHTML = `${quarters.toFixed(0)}`;
             gridDiv.appendChild(gridLabel);
             gridLabel.style.position = "absolute";
             gridDiv.classList.add('grid-element');
@@ -169,7 +168,7 @@ export class PianoRollView extends AView {
             gridDiv.style.left = `${x}px`;
             gridDiv.style.width = `2px`;
             gridDiv.style.top = "0px";
-            gridDiv.style.height = `${height}px`;
+            gridDiv.style.height = `${height+25}px`;
             canvas.appendChild(gridDiv);
         }
     }

@@ -1,4 +1,5 @@
 import * as MidiEvents from 'midievents';
+import * as _ from 'lodash';
 
 const MaxPitchBend = 16383;
 
@@ -34,6 +35,10 @@ export function eventTypeToString(event) {
             case MidiEvents.EVENT_META_SEQUENCER_SPECIFIC: return 'custom';
         }
     }
+    if (event.type === MidiEvents.EVENT_SYSEX) {
+        return "sysex";
+    }
+    return "unknown midi type";
 }
 
 export function eventDataToString(event) {
@@ -58,6 +63,15 @@ export function eventDataToString(event) {
     if (event.type === MidiEvents.EVENT_MIDI 
         && (event.subtype === MidiEvents.EVENT_MIDI_PITCH_BEND)) {
         return ((event.param2 << 7 | event.param1) / MaxPitchBend).toFixed(6);
+    }
+    if (event.type === MidiEvents.EVENT_SYSEX) {
+        const numBytesToDisplay = 5;
+        const hex = _(['F0', ...(event.data || [])
+            .map(x => x.toString(16))
+            .map(x => _.padStart(x, 2, '0'))
+            .map(x => x.toUpperCase())
+        ]).takeRight(numBytesToDisplay);
+        return (numBytesToDisplay < event.data.length ? 'F0 .. ' : 'F0 ') + hex.join(" ");
     }
     const paramToString = x => x !== undefined ? x.toString() : '';
     return `${paramToString(event.param1)} ${paramToString(event.param2)}`;
